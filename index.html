@@ -211,7 +211,7 @@
     <div class="container">
       <h2>Be first to try it</h2>
       <p class="sub">We're building Lantern for small businesses that need real WCAG compliance — not overlay gimmicks. Join the waitlist and lock in your founding-member price.</p>
-      <form class="email-form" id="waitlist-form" action="https://formspree.io/f/devpatel-deploy@web-library.net" method="POST">
+      <form class="email-form" id="waitlist-form" action="https://github.com/hishboy/lantern-validation/issues/new?labels=waitlist&template=waitlist.yml" method="GET" target="_blank">
         <input type="email" name="email" placeholder="you@example.com" required>
         <input type="hidden" name="_subject" value="Lantern Waitlist Signup">
         <button type="submit">Notify me</button>
@@ -238,8 +238,13 @@
       e.preventDefault();
       var form = e.target;
       var success = document.getElementById('success-msg');
-      var formData = new FormData(form);
-      fetch(form.action, {
+      var email = form.querySelector('input[type=email]').value;
+      var ghUrl = 'https://github.com/hishboy/lantern-validation/issues/new?labels=waitlist&template=waitlist.yml';
+      // Try Formspree first; fall back to GitHub issue form
+      var formData = new FormData();
+      formData.append('email', email);
+      formData.append('_subject', 'Lantern Waitlist Signup');
+      fetch('https://formspree.io/f/devpatel-deploy@web-library.net', {
         method: 'POST',
         body: formData,
         headers: { 'Accept': 'application/json' }
@@ -248,12 +253,14 @@
           form.style.display = 'none';
           success.classList.add('show');
         } else {
-          alert('Something went wrong. Please try again.');
+          window.open(ghUrl, '_blank');
+          form.style.display = 'none';
+          success.classList.add('show');
         }
       }).catch(function() {
-        // Fallback: open mailto link
-        var email = form.querySelector('input[type=email]').value;
-        window.location.href = 'mailto:hello@lantern.dev?subject=Lantern Waitlist&body=Please add me to the waitlist. My email: ' + email;
+        window.open(ghUrl, '_blank');
+        form.style.display = 'none';
+        success.classList.add('show');
       });
     });
   </script>
