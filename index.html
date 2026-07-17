@@ -1,0 +1,262 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Lantern — Web accessibility compliance for small businesses</title>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+      line-height: 1.6;
+      color: #1e293b;
+      background: #f8fafc;
+    }
+    .container { max-width: 640px; margin: 0 auto; padding: 0 24px; }
+
+    /* Header */
+    header { padding: 28px 0 8px; }
+    .logo { font-size: 1.25rem; font-weight: 700; color: #0f172a; letter-spacing: -0.02em; }
+    .logo span { color: #6366f1; }
+
+    /* Hero */
+    .hero { padding: 40px 0 32px; text-align: center; }
+    .hero h1 { font-size: 1.875rem; font-weight: 700; color: #0f172a; line-height: 1.25; letter-spacing: -0.02em; margin-bottom: 16px; }
+    .hero .sub { font-size: 1.0625rem; color: #475569; margin-bottom: 28px; max-width: 500px; margin-left: auto; margin-right: auto; }
+    .hero .urgency-badge { display: inline-block; background: #fef2f2; color: #dc2626; font-size: 0.8125rem; font-weight: 600; padding: 6px 14px; border-radius: 999px; margin-bottom: 20px; }
+    .cta-primary { display: inline-block; background: #4f46e5; color: #fff; font-size: 1rem; font-weight: 600; padding: 14px 32px; border-radius: 8px; text-decoration: none; border: none; cursor: pointer; transition: background 0.15s; }
+    .cta-primary:hover { background: #4338ca; }
+    .cta-micro { font-size: 0.8125rem; color: #94a3b8; margin-top: 10px; }
+
+    /* Risk banner */
+    .risk-banner { background: #fef2f2; border: 1px solid #fecaca; border-radius: 10px; padding: 20px; margin: 24px 0; text-align: center; }
+    .risk-banner .penalty { font-size: 2.25rem; font-weight: 700; color: #dc2626; line-height: 1.1; }
+    .risk-banner .penalty-label { font-size: 0.9375rem; color: #991b1b; margin-top: 6px; }
+    .risk-banner .penalty-source { font-size: 0.75rem; color: #a1a1aa; margin-top: 8px; }
+
+    /* Problem section */
+    .section { padding: 36px 0; }
+    .section h2 { font-size: 1.25rem; font-weight: 700; color: #0f172a; margin-bottom: 24px; text-align: center; }
+    .problem-grid { display: grid; grid-template-columns: 1fr; gap: 20px; }
+    @media (min-width: 600px) { .problem-grid { grid-template-columns: 1fr 1fr 1fr; gap: 16px; } }
+    .problem-card { background: #fff; border: 1px solid #e2e8f0; border-radius: 10px; padding: 20px; }
+    .problem-card .icon { font-size: 1.5rem; margin-bottom: 8px; }
+    .problem-card h3 { font-size: 0.9375rem; font-weight: 600; color: #0f172a; margin-bottom: 6px; }
+    .problem-card p { font-size: 0.875rem; color: #64748b; }
+
+    /* Evidence section */
+    .evidence-grid { display: grid; grid-template-columns: 1fr; gap: 16px; }
+    @media (min-width: 600px) { .evidence-grid { grid-template-columns: 1fr 1fr; } }
+    .evidence-card { background: #fff; border: 1px solid #e2e8f0; border-left: 4px solid #4f46e5; border-radius: 10px; padding: 20px; }
+    .evidence-card .number { font-size: 1.75rem; font-weight: 700; color: #4f46e5; line-height: 1.1; margin-bottom: 6px; }
+    .evidence-card .label { font-size: 0.875rem; color: #475569; margin-bottom: 4px; }
+    .evidence-card .source { font-size: 0.75rem; color: #94a3b8; }
+
+    /* Solution section */
+    .solution-intro { font-size: 1rem; color: #475569; text-align: center; margin-bottom: 24px; max-width: 480px; margin-left: auto; margin-right: auto; }
+    .solution-list { list-style: none; max-width: 520px; margin: 0 auto; }
+    .solution-list li { display: flex; align-items: flex-start; gap: 12px; padding: 14px 0; border-bottom: 1px solid #e2e8f0; }
+    .solution-list li:last-child { border-bottom: none; }
+    .solution-list .check { color: #4f46e5; font-weight: 700; flex-shrink: 0; }
+    .solution-list .text { font-size: 0.9375rem; color: #334155; }
+    .solution-list .text strong { color: #0f172a; }
+
+    /* Price callout */
+    .price-callout { text-align: center; padding: 20px; background: #eef2ff; border-radius: 10px; margin: 28px 0; }
+    .price-callout .old-price { font-size: 0.875rem; color: #94a3b8; text-decoration: line-through; }
+    .price-callout .new-price { font-size: 2rem; font-weight: 700; color: #4f46e5; }
+    .price-callout .price-label { font-size: 0.875rem; color: #475569; margin-top: 4px; }
+
+    /* Email capture */
+    .email-section { padding: 40px 0; text-align: center; }
+    .email-section h2 { font-size: 1.5rem; font-weight: 700; color: #0f172a; margin-bottom: 8px; }
+    .email-section .sub { font-size: 0.9375rem; color: #64748b; margin-bottom: 24px; max-width: 420px; margin-left: auto; margin-right: auto; }
+    .email-form { display: flex; flex-direction: column; gap: 10px; max-width: 380px; margin: 0 auto; }
+    @media (min-width: 480px) { .email-form { flex-direction: row; } }
+    .email-form input[type="email"] { flex: 1; padding: 12px 16px; font-size: 1rem; border: 1px solid #cbd5e1; border-radius: 8px; outline: none; }
+    .email-form input[type="email"]:focus { border-color: #4f46e5; box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.1); }
+    .email-form button { background: #4f46e5; color: #fff; font-size: 1rem; font-weight: 600; padding: 12px 24px; border: none; border-radius: 8px; cursor: pointer; white-space: nowrap; transition: background 0.15s; }
+    .email-form button:hover { background: #4338ca; }
+    .email-micro { font-size: 0.8125rem; color: #94a3b8; margin-top: 10px; }
+    .email-success { display: none; padding: 16px; background: #ecfdf5; border: 1px solid #a7f3d0; border-radius: 8px; color: #065f46; font-size: 0.9375rem; max-width: 380px; margin: 0 auto; }
+    .email-success.show { display: block; }
+
+    /* Footer */
+    footer { padding: 24px 0; text-align: center; border-top: 1px solid #e2e8f0; }
+    footer .brand { font-size: 0.875rem; font-weight: 600; color: #0f172a; }
+    footer .tagline { font-size: 0.8125rem; color: #94a3b8; margin-top: 2px; }
+    footer .copyright { font-size: 0.75rem; color: #cbd5e1; margin-top: 8px; }
+  </style>
+</head>
+<body>
+
+  <!-- Header -->
+  <header>
+    <div class="container">
+      <div class="logo">Lantern<span>.</span></div>
+    </div>
+  </header>
+
+  <!-- Hero -->
+  <section class="hero">
+    <div class="container">
+      <div class="urgency-badge">⚠️ 3,948 ADA lawsuits filed in 2025 — up 24% from last year</div>
+      <h1>Real WCAG compliance — not another overlay widget.</h1>
+      <p class="sub">accessiBe was fined $1M for fake compliance. 22.6% of sued sites had widgets installed. We scan your actual code, guide remediation, and generate compliance docs — from $49/month.</p>
+      <button class="cta-primary" onclick="document.getElementById('email-capture').scrollIntoView()">Get early access</button>
+      <p class="cta-micro">We'll email you when the beta opens. No spam, ever.</p>
+    </div>
+  </section>
+
+  <!-- Risk banner -->
+  <div class="container">
+    <div class="risk-banner">
+      <div class="penalty">77%</div>
+      <div class="penalty-label">of businesses sued for ADA web compliance have under $25M revenue — SMBs are the targets</div>
+      <div class="penalty-source">Source: 2025 ADA lawsuit data, UsableNet/Seyfarth</div>
+    </div>
+  </div>
+
+  <!-- Problem -->
+  <section class="section" style="background: #fff;">
+    <div class="container">
+      <h2>The problem today</h2>
+      <div class="problem-grid">
+        <div class="problem-card">
+          <div class="icon">⚖️</div>
+          <h3>Lawsuits targeting SMBs</h3>
+          <p>ADA web compliance lawsuits rose 24% in 2025. 77% of sued businesses have under $25M revenue. Plaintiffs' lawyers are going after small sites, not just enterprises.</p>
+        </div>
+        <div class="problem-card">
+          <div class="icon">🔌</div>
+          <h3>Overlay widgets don't work</h3>
+          <p>accessiBe raised $58M and promised automated compliance — then the FTC fined them $1M for deceptive claims. 22.6% of sued sites had accessibility widgets installed. Widgets don't prevent lawsuits; they may attract them.</p>
+        </div>
+        <div class="problem-card">
+          <div class="icon">💸</div>
+          <h3>Manual audits are unaffordable</h3>
+          <p>Enterprise accessibility audits cost $5,000–$20,000+. That's out of reach for small businesses and nonprofits who now must meet WCAG 2.1 AA under the DOJ's April 2024 rule.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Evidence -->
+  <section class="section">
+    <div class="container">
+      <h2>Why we're building this</h2>
+      <div class="evidence-grid">
+        <div class="evidence-card">
+          <div class="number">95.9%</div>
+          <div class="label">of websites fail WCAG compliance — the problem is nearly universal</div>
+          <div class="source">Source: WebAIM Million, 2025</div>
+        </div>
+        <div class="evidence-card">
+          <div class="number">3,948</div>
+          <div class="label">ADA web accessibility lawsuits filed in 2025 — up 24% year-over-year</div>
+          <div class="source">Source: UsableNet/Seyfarth ADA lawsuit report, 2025</div>
+        </div>
+        <div class="evidence-card">
+          <div class="number">$1M</div>
+          <div class="label">FTC fine against accessiBe for deceptive compliance claims — the overlay market is discredited</div>
+          <div class="source">Source: FTC settlement, 2025</div>
+        </div>
+        <div class="evidence-card">
+          <div class="number">$5K–$20K</div>
+          <div class="label">What a manual accessibility audit costs — unaffordable for the SMBs now required to comply</div>
+          <div class="source">Source: Industry pricing data, 2025</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Solution -->
+  <section class="section" style="background: #fff;">
+    <div class="container">
+      <h2>What we're building</h2>
+      <p class="solution-intro">Lantern is real code-level WCAG compliance for small businesses — not an overlay widget. We scan your actual source code, tell you exactly what to fix, and generate the compliance documentation you need.</p>
+      <ul class="solution-list">
+        <li>
+          <span class="check">✓</span>
+          <span class="text"><strong>Code-level WCAG scanning</strong> — we analyze your actual HTML, CSS, and JavaScript, not a superficial overlay. Find real issues, not cosmetic patches.</span>
+        </li>
+        <li>
+          <span class="check">✓</span>
+          <span class="text"><strong>Step-by-step remediation guidance</strong> — every issue comes with plain-English instructions your developer (or you) can follow to fix it</span>
+        </li>
+        <li>
+          <span class="check">✓</span>
+          <span class="text"><strong>Compliance documentation</strong> — generate the audit reports and VPATs you need to show good-faith compliance if you're ever challenged</span>
+        </li>
+        <li>
+          <span class="check">✓</span>
+          <span class="text"><strong>Built for SMBs</strong> — $49/month, not $5,000 audits or $500/month enterprise tools. No sales calls. No contracts. Cancel anytime.</span>
+        </li>
+      </ul>
+    </div>
+  </section>
+
+  <!-- Price callout -->
+  <div class="container">
+    <div class="price-callout">
+      <div class="old-price">Manual audits: $5,000–$20,000+ · Enterprise tools: $500+/month</div>
+      <div class="new-price">$49<span style="font-size:1rem;font-weight:400;">/month</span></div>
+      <div class="price-label">Founding-member price for early access subscribers</div>
+    </div>
+  </div>
+
+  <!-- Email capture -->
+  <section class="email-section" id="email-capture">
+    <div class="container">
+      <h2>Be first to try it</h2>
+      <p class="sub">We're building Lantern for small businesses that need real WCAG compliance — not overlay gimmicks. Join the waitlist and lock in your founding-member price.</p>
+      <form class="email-form" id="waitlist-form" action="https://formspree.io/f/devpatel-deploy@web-library.net" method="POST">
+        <input type="email" name="email" placeholder="you@example.com" required>
+        <input type="hidden" name="_subject" value="Lantern Waitlist Signup">
+        <button type="submit">Notify me</button>
+      </form>
+      <p class="email-micro">We respect your inbox. One email when the beta opens, then silence unless you reply.</p>
+      <div class="email-success" id="success-msg">
+        You're on the list. We'll email you when Lantern is ready — and your $49/month founding price is locked in.
+      </div>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer>
+    <div class="container">
+      <div class="brand">Lantern</div>
+      <div class="tagline">Find overlooked software markets with real demand.</div>
+      <div class="copyright">© 2026 Lantern. All rights reserved.</div>
+    </div>
+  </footer>
+
+  <!-- Minimal JS for form success state -->
+  <script>
+    document.getElementById('waitlist-form').addEventListener('submit', function(e) {
+      e.preventDefault();
+      var form = e.target;
+      var success = document.getElementById('success-msg');
+      var formData = new FormData(form);
+      fetch(form.action, {
+        method: 'POST',
+        body: formData,
+        headers: { 'Accept': 'application/json' }
+      }).then(function(res) {
+        if (res.ok) {
+          form.style.display = 'none';
+          success.classList.add('show');
+        } else {
+          alert('Something went wrong. Please try again.');
+        }
+      }).catch(function() {
+        // Fallback: open mailto link
+        var email = form.querySelector('input[type=email]').value;
+        window.location.href = 'mailto:hello@lantern.dev?subject=Lantern Waitlist&body=Please add me to the waitlist. My email: ' + email;
+      });
+    });
+  </script>
+
+</body>
+</html>
